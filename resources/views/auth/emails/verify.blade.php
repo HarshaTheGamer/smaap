@@ -1,0 +1,1 @@
+Click here to verify your email: <a href="{{ $link = url('smaap/verify').'?email='.urlencode($email).'&code='.$code }}">{{ $link }}</a>

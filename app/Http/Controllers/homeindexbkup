@@ -1,0 +1,123 @@
+$FriendRequests = DB::table('friends')->select('user_one')->where('user_two','=', Auth::user()->id)->where('status','=', 0)->where('request_count','=', 1)->get();
+        
+        if (count($FriendRequests)!=0) {
+            foreach ($FriendRequests as $fruser) {
+                $frequests[] = DB::table('users')->where('id','=',$fruser->user_one)->get();
+
+            }
+            $hasfriendrequest = 1;
+            $hasfriends = 1;
+             if (isset($friends)) {
+                 return view('home', [
+            'users' => $users,
+            'hasfriendrequest' => $hasfriendrequest,
+             'hasfriends' => $hasfriends,
+            'frequests' => $frequests,
+            'friends' => $friends,
+            ]);
+            }
+              $hasfriendrequest = 1;
+            $hasfriends = 0;
+             return view('home', [
+            'users' => $users,
+            'frequests' => $frequests,
+             'hasfriendrequest' => $hasfriendrequest,
+             'hasfriends' => $hasfriends,
+
+            ]);
+            
+        } 
+        elseif(count($FriendRequests)==0) {
+
+
+            if (count($Friends)!=0) {
+                foreach ($Friends as $friend) {
+                    $friends[] = DB::table('users')->where('id','=',$friend->user_two)->get();
+                }
+
+            }
+
+            if(count($first)!=0) {
+                    foreach ($first as $friend) {
+                        $friends[] = DB::table('users')->where('id','=',$friend->user_one)->get();
+                    }
+                }
+            if (count($Friends)==0 && count($first)==0) {
+                $hasfriendrequest = 0;
+            $hasfriends = 0;
+            return view('home', [
+                'users' => $users,
+             'hasfriendrequest' => $hasfriendrequest,
+             'hasfriends' => $hasfriends,                
+            ]);
+            }
+            $hasfriendrequest = 0;
+            $hasfriends = 1;
+               
+            return view('home', [
+                'users' => $users,
+                'friends' => $friends,
+                'hasfriendrequest' => $hasfriendrequest,
+             'hasfriends' => $hasfriends,
+            ]);
+        }
+        else {
+
+
+        --------------------------------
+
+        <!-- Friend Request Panel -->
+@if(\Auth::user()->email != "admin@smaap.com")
+                        <div class="panel panel-default" id="RequestPanel">
+                        @if($hasfriendrequest == 1)
+                            <div class="panel-heading">
+                                Friend Requests
+                            </div>
+
+                            <div class="panel-body">
+                                <table class="table table-striped user-table">
+
+                                    <tbody>
+                                        @foreach ($frequests as $frequest)
+                                            @foreach ($frequest as $fr)
+                                                <tr>
+                                                    <!-- user Name -->
+                                                    <td class="table-text">
+                                                        <form action="{{ url('ViewUserProfile') }}" method="GET">
+                                                            <input type="hidden" name="user1" value="{{ Auth::user()->id }}">
+                                                            <input type="hidden" name="user2" value="{{ $fr->id }}">
+
+                                                            <button type="submit" class="" style="width:100%;">
+                                                                <div>
+                                                                            <img src='{{ $fr->profile }}' class="Profile">
+                                                                            {{ $fr->name }}
+
+                                                                </div>
+                                                            </button>
+                                                        </form>
+                                                        <form action="{{ url('rejectfr') }}" method="POST" class="AcceptReject">
+                                                            {{ csrf_field() }}
+                                                            <input type="hidden" name="user1" value="{{ Auth::user()->id }}">
+                                                            <input type="hidden" name="user2" value="{{ $fr->id }}">
+                                                            <input type="hidden" name="status" value="2">
+
+                                                            <button type="submit" class="btn btn-danger"> Reject </button>
+                                                        </form>
+                                                        <form action="{{ url('acceptfr') }}" method="POST" class="AcceptReject">
+                                                            {{ csrf_field() }}
+                                                            <input type="hidden" name="user1" value="{{ Auth::user()->id }}">
+                                                            <input type="hidden" name="user2" value="{{ $fr->id }}">
+                                                            <input type="hidden" name="status" value="1">
+
+                                                            <button type="submit" class="btn btn-success"> Accept </button>
+                                                        </form>                                                    
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            @endif
+                        </div>
+                @endif 
