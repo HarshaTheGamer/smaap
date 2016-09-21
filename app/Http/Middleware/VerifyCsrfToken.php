@@ -26,7 +26,8 @@ class VerifyCsrfToken extends BaseVerifier
         '/password/reset',
         'smaap/zonelang',
         'smaap/uploadtogallery',
-        'smaap/online'
+        'smaap/online',
+        'smaap/recentlike'
         
     ];
 
