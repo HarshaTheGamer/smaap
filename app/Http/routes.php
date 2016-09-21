@@ -346,6 +346,7 @@ Route::get('smaap/logout','SmaapController@logout');
 Route::get('smaap/friendrequests','SmaapController@friendrequests');
 Route::get('smaap/latlng','SmaapController@latlng');
 Route::get('smaap/newrequest','SmaapController@newrequest');
+Route::post('smaap/recentlike','SmaapController@recentlike');
 Route::post('smaap/register','SmaapController@register');
 Route::post('smaap/currentzone','SmaapController@currentzone');
 Route::post('smaap/uploadFile','SmaapController@uploadFile');
