@@ -162,6 +162,22 @@ class SmaapController extends Controller
         
     }
 
+    public function recentlike(Request $request)
+    {
+        $max = \App\Like::where('user_two',Auth::user()->id)->max('id');
+        $liker= \App\Like::select('user_one')->where('user_two',Auth::user()->id)->where('id',$max)->get();
+        if (count($liker)==0) {
+            return "0 results";
+        }
+        else {
+            foreach ($liker as $key) {
+            $jsonData[]=\App\User::where('id',$key->user_one)->first();
+            }
+            return json_encode($jsonData);
+        }
+        
+    }
+
     public function currentzone(Request $request)
     {
         if (!Auth::check()) {
